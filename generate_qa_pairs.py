@@ -100,7 +100,7 @@ def extract_qa_pairs_intrel(page):
     """
     qa_pairs = [] 
     content = BeautifulSoup(page, "html.parser")
-    process_a_tags(content)
+    #process_a_tags(content)
     
     sec_titles = list(map(lambda x : x.get_text(), 
                             content.find_all('div', class_='elementor-clearfix')))
@@ -111,14 +111,15 @@ def extract_qa_pairs_intrel(page):
         q_spans = reduce(lambda a, b: a+b, list(map(lambda x : x.find_parents('span'), q_is)))
         sec_questions = list(map(lambda x : x.get_text(), q_spans))
 
-        sec_answers = list(map(lambda x : x.get_text(), 
-                            sec_contents[sec].find_all('div', class_=['eael-accordion-content', 'clearfix'])))
+        sec_answers = list(map(lambda x : str(x.contents[0]).replace('<p>', '').replace('</p>', '')
+                        .replace('</p>', ' ').replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ','), 
+                        sec_contents[sec].find_all('div', class_=['eael-accordion-content', 'clearfix'])))
 
         for p in range(len(sec_questions)):
             qa_pairs.append({'question': sec_questions[p], 
                             'answer': sec_answers[p], 
-                            'page': 'relint',
-                            'section': sec_titles[sec]
+                            #'page': 'relint',
+                            #'section': sec_titles[sec]
                             })
     
     return qa_pairs
@@ -140,16 +141,17 @@ def extract_qa_pairs_doctorate(page):
     sec_questions = list(map(lambda x: sub('\n[\t]+[\s]+', '', x.get_text()),
                             sec_content.find_all('a', class_='accordion-toggle')))
 
-    process_a_tags(sec_content)
+    #process_a_tags(sec_content)
 
-    sec_answers = list(map(lambda x: x.get_text().replace('\n', ''),
-                           sec_content.find_all('div', class_='panel-body')))
+    sec_answers = list(map(lambda x: str(x.contents[1].contents[0]).replace('<p style=\"text-align: justify;\">', '')
+                    .replace('</p>', ' ').replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ',')
+                    ,sec_content.find_all('div', class_='panel-body')))
     
     for p in range(len(sec_questions)):
         qa_pairs.append({'question': sec_questions[p], 
                         'answer': sec_answers[p],
-                        'page': 'doctorate', 
-                        'section': sec_title,
+                        #'page': 'doctorate', 
+                        #'section': sec_title,
                          })
     return qa_pairs
 
@@ -185,10 +187,11 @@ def save_as_csv(file_name, data):
     """ Saves the provided data as a csv file """ 
     questions = list(map(lambda p: p['question'], data))
     answers = list(map(lambda p: p['answer'], data))
-    sections = list(map(lambda p: p['section'], data))
-    d = {'Section': sections, 'Question': questions, 'Answer': answers }
+    #sections = list(map(lambda p: p['section'], data))
+    # d = {'Section': sections, 'Question': questions, 'Answer': answers }
+    d = {'Question': questions, 'Answer': answers }
     df = pd.DataFrame(data=d)
-    df.to_csv('{}.csv'.format(file_name), sep='\t', index=False)
+    df.to_csv('{}.csv'.format(file_name), sep=',', index=False)
 
 
 def main():
