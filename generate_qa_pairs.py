@@ -111,8 +111,8 @@ def extract_qa_pairs_intrel(page):
         q_spans = reduce(lambda a, b: a+b, list(map(lambda x : x.find_parents('span'), q_is)))
         sec_questions = list(map(lambda x : x.get_text(), q_spans))
 
-        sec_answers = list(map(lambda x : str(x.contents[0]).replace('<p>', '').replace('</p>', '')
-                        .replace('</p>', ' ').replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ','), 
+        sec_answers = list(map(lambda x : str(x.contents[0]).replace('<p>', '').replace('</p>', '').replace('</p>', ' ')
+                        .replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ',').replace('<br/>', ' '), 
                         sec_contents[sec].find_all('div', class_=['eael-accordion-content', 'clearfix'])))
 
         for p in range(len(sec_questions)):
@@ -143,9 +143,9 @@ def extract_qa_pairs_doctorate(page):
 
     #process_a_tags(sec_content)
 
-    sec_answers = list(map(lambda x: str(x.contents[1].contents[0]).replace('<p style=\"text-align: justify;\">', '')
-                    .replace('</p>', ' ').replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ',')
-                    ,sec_content.find_all('div', class_='panel-body')))
+    sec_answers = list(map(lambda x: str(x.contents[1].contents[0]).replace('<p style=\"text-align: justify;\">', '').replace('</p>', ' ')
+                    .replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ',').replace('<br/>', ' '),
+                    sec_content.find_all('div', class_='panel-body')))
     
     for p in range(len(sec_questions)):
         qa_pairs.append({'question': sec_questions[p], 
