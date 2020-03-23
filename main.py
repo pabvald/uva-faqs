@@ -175,6 +175,7 @@ def extract_qa_pairs_doctorate():
             #process_a_tags(sec_content)
             sec_answers = list(map(lambda x: str(x.contents[1].contents[0])
                                             .replace('<p style=\"text-align: justify;\">', '')
+                                            .replace('<p>', '')
                                             .replace('</p>', ' ')
                                             .replace('<ul>', '')
                                             .replace('</ul>', '')

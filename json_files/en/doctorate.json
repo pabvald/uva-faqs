@@ -28,7 +28,7 @@
         "question": "Who can I ask if I still have any question about formative activities?"
     },
     {
-        "answer": "<p>You must meet one of the <strong>requirements</strong> established in the normative that regulates doctoral studies. ",
+        "answer": "You must meet one of the <strong>requirements</strong> established in the normative that regulates doctoral studies. ",
         "question": "Which are the requirements I must meet to be admitted in a doctoral program?"
     },
     {
@@ -116,7 +116,7 @@
         "question": "What are the Formative complements?"
     },
     {
-        "answer": "<p>Yes, if so has stated the Academic Commission of your doctoral program at the time of your admission. ",
+        "answer": "Yes, if so has stated the Academic Commission of your doctoral program at the time of your admission. ",
         "question": "Are formative complements compulsory? "
     },
     {
@@ -160,7 +160,7 @@
         "question": "How must I bind the card copy for deposit"
     },
     {
-        "answer": "<p>No, there isn’t. You just have to follow the cover model that can be found in <a href=\"/export/sites/doctorado/laescuela/impresos/tesis.html\">the forms section</a>. ",
+        "answer": "No, there isn’t. You just have to follow the cover model that can be found in <a href=\"/export/sites/doctorado/laescuela/impresos/tesis.html\">the forms section</a>. ",
         "question": "Is there a special format for the thesis?"
     },
     {
@@ -196,7 +196,7 @@
         "question": "Can specialised evaluators be on the examination board?"
     },
     {
-        "answer": "<p>Yes, they can ",
+        "answer": "Yes, they can ",
         "question": "Can a member of the examination board and a specialised evaluator belong to the same university?"
     },
     {
@@ -208,7 +208,7 @@
         "question": "When does the Doctoral Commission meet?"
     },
     {
-        "answer": "<p>You can check its composition in the following link: <a href=\"http://www.uva.es/export/sites/uva/1.lauva/1.16.comisiones/1.16.16.comisiondoctorado/1.16.16.01.composicion/index.html\">composition of the PhD committee (UVa)</a> ",
+        "answer": "You can check its composition in the following link: <a href=\"http://www.uva.es/export/sites/uva/1.lauva/1.16.comisiones/1.16.16.comisiondoctorado/1.16.16.01.composicion/index.html\">composition of the PhD committee (UVa)</a> ",
         "question": "Can I know who comprises the Doctoral Commission?"
     },
     {
@@ -236,7 +236,7 @@
         "question": "My grade point average does not reach the stated minimum for predoctoral contracts, does this invalidate my application? Is there another way to apply for predoctoral contracts?"
     },
     {
-        "answer": "<p>No, directors must participate on a research project and meet all the established requirements. ",
+        "answer": "No, directors must participate on a research project and meet all the established requirements. ",
         "question": "My director does not participate on a research project, may I apply for a predoctoral contract?"
     },
     {
@@ -244,15 +244,15 @@
         "question": "How can I submit my application through the electronic headquarters?"
     },
     {
-        "answer": "<p>They are on the electronic headquarters of the UVa: <a href=\"https://sede.uva.es/tramitador/ciudadano?idEntidad=UVA&amp;entrada=ciudadano&amp;idLogica=loginComponent&amp;fkIdioma=ES\" target=\"_blank\">Oficina Virtual para la Tramitación Electrónica de la Universidad de Valladolid</a> (Iniciar Expediente -&gt; Investigación -&gt; Solicitud de Contratos Predoctorales). ",
+        "answer": "They are on the electronic headquarters of the UVa: <a href=\"https://sede.uva.es/tramitador/ciudadano?idEntidad=UVA&amp;entrada=ciudadano&amp;idLogica=loginComponent&amp;fkIdioma=ES\" target=\"_blank\">Oficina Virtual para la Tramitación Electrónica de la Universidad de Valladolid</a> (Iniciar Expediente -&gt; Investigación -&gt; Solicitud de Contratos Predoctorales). ",
         "question": "Where can I find the annexes?"
     },
     {
-        "answer": "<p>You can call the information number 4727 (if you call from outside the UVa, you must dial the complete number: 983 184727) from 9 am to 2 pm (Monday to Friday) and also from 4 pm to 6 pm (Monday to Thursday). ",
+        "answer": "You can call the information number 4727 (if you call from outside the UVa, you must dial the complete number: 983 184727) from 9 am to 2 pm (Monday to Friday) and also from 4 pm to 6 pm (Monday to Thursday). ",
         "question": "I can not access the electronic headquarters of the UVa, who can I ask?"
     },
     {
-        "answer": "<p>You can write to <a href=\"mailto:servicio.investigacion@uva.es\">servicio.investigacion@uva.es</a>. ",
+        "answer": "You can write to <a href=\"mailto:servicio.investigacion@uva.es\">servicio.investigacion@uva.es</a>. ",
         "question": "I still have a question, who can I ask?"
     }
 ]
