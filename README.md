@@ -27,7 +27,7 @@ bs4==0.0.1
 <hr>
 
 # University of Valladolid (UVA) FAQS 
-Obtaining and processing of the frequently asked questions (FAQs) from the [International Relations page](https://relint.uva.es/internacional/english/students/welcome-guide/faq/) and the [School Doctorate page](https://escueladoctorado.uva.es/export/sites/doctorado/faqs/AAFF/?lang=en) of the University of Valladolid in **Spanish** and **English**.
+Obtaining and processing of the frequently asked questions (FAQs) from the [International Relations page](https://relint.uva.es/internacional/english/students/welcome-guide/faq/) and the [Doctoral School page](https://escueladoctorado.uva.es/export/sites/doctorado/faqs/AAFF/?lang=en) of the University of Valladolid in **Spanish** and **English**.
 
 The questions are stored in both CSV and JSON formats. Each file has the following 2 fields:
 
