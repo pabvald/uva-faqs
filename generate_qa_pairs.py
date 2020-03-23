@@ -13,67 +13,89 @@ from functools import reduce
 
 
 # GLOBAL VARIABLES
-DIR_NAME = 'raw_html'
+HTML_DIR = 'raw_html'
+CSV_DIR = 'csv_files'
+JSON_DIR = 'json_files'
+
 OUTPUT_ROOT_NAME = "qa_pairs"
 INTREL_ROOT_NAME = "intrel"
 DOCTORATE_ROOT_NAME = "doctorate"
-INTREL_URLS = ['https://relint.uva.es/internacional/english/students/welcome-guide/faq/',
-               ]
-DOCTORATE_URLS = ['https://escueladoctorado.uva.es/export/sites/doctorado/faqs/AAFF/?lang=en', 
-                  'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/admisionYMatricula/?lang=en',
-                  'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/PD/?lang=en',
-                  'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/tesis/?lang=en',
-                  'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/financiacion/?lang=en',
-                  ]
+LANGUAGES =['en', 'es'] 
+INTREL_URLS = {
+    'en':[ 'https://relint.uva.es/internacional/english/students/welcome-guide/faq/'],
+
+    'es':['https://relint.uva.es/internacional/espanol/estudiantes/guia-bienvenida/preguntas-frecuentes/']  
+} 
+DOCTORATE_URLS = {
+    'en': [ 'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/AAFF/?lang=en', 
+            'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/admisionYMatricula/?lang=en',
+            'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/PD/?lang=en',
+            'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/tesis/?lang=en',
+            'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/financiacion/?lang=en',
+        ],
+
+    'es':[
+        'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/AAFF/?lang=es', 
+        'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/admisionYMatricula/?lang=es',
+        'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/PD/?lang=es',
+        'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/tesis/?lang=es',
+        'https://escueladoctorado.uva.es/export/sites/doctorado/faqs/financiacion/?lang=es',
+    ] 
+} 
 
 
+def make_dirs():
+    """ Creates the different directories if they don't already exist """
+    print("Creating directories...")
+    for lang in LANGUAGES:
+        # Create directory        
+        try:
+            os.makedirs('{}/{}'.format(HTML_DIR, lang))
+            os.makedirs('{}/{}'.format(JSON_DIR, lang))
+            os.makedirs('{}/{}'.format(CSV_DIR, lang))
+        except FileExistsError:
+            # Directory already exists
+            pass
 
-# FUNCTIONS
-def gen_file_path( root, i):
+def gen_file_path(main_dir, lang, root, i):
     """ Combines a root name and an index into an HTML file name """
-    return "{}/{}{}.html".format(DIR_NAME, root, i)
+    return "{}/{}/{}{}.html".format(main_dir, lang, root, i)
 
-
-def download_files():
+def download_html_files():
     """ Downloads html files if they don't exist and saves
         them in the specified directory.
     """
-    # Create directory
-    try:
-        os.makedirs(DIR_NAME)
-    except FileExistsError:
-        # Directory already exists
-        pass
-    
-    # Download UVA International Relationships FAQs
-    for i, url in enumerate(INTREL_URLS):
-        file_path = gen_file_path(INTREL_ROOT_NAME, i+1)
+    print("Downloading HTML files...")
+    for lang in LANGUAGES:       
+        # Download UVA International Relationships FAQs
+        for i, url in enumerate(INTREL_URLS[lang]):
+            file_path = gen_file_path(HTML_DIR, lang, INTREL_ROOT_NAME, i+1)
 
-        try:
-            fin = open(file_path, 'rb')
-            fin.close()
-        except FileNotFoundError:
-            # File doesn't exist
-            req = Request(url,  headers={'User-Agent': 'Mozilla/5.0'})
-            webContent = urlopen(req).read()
-            fout = open(file_path, 'wb')
-            fout.write(webContent)
-            fout.close() 
+            try:
+                fin = open(file_path, 'rb')
+                fin.close()
+            except FileNotFoundError:
+                # File doesn't exist
+                req = Request(url,  headers={'User-Agent': 'Mozilla/5.0'})
+                webContent = urlopen(req).read()
+                fout = open(file_path, 'wb')
+                fout.write(webContent)
+                fout.close() 
 
-    # Download UVA Doctorate School FAQs
-    for i, url in enumerate(DOCTORATE_URLS):
-        file_path = gen_file_path(DOCTORATE_ROOT_NAME, i+1)
+        # Download UVA Doctorate School FAQs
+        for i, url in enumerate(DOCTORATE_URLS[lang]):
+            file_path = gen_file_path(HTML_DIR, lang, DOCTORATE_ROOT_NAME, i+1)
 
-        try:
-            fin = open(file_path, 'rb')
-            fin.close()
-        except FileNotFoundError:
-            # File doesn't exist
-            req = Request(url,  headers={'User-Agent': 'Mozilla/5.0'})
-            webContent = urlopen(req).read()
-            fout = open(file_path, 'wb')
-            fout.write(webContent)
-            fout.close() 
+            try:
+                fin = open(file_path, 'rb')
+                fin.close()
+            except FileNotFoundError:
+                # File doesn't exist
+                req = Request(url,  headers={'User-Agent': 'Mozilla/5.0'})
+                webContent = urlopen(req).read()
+                fout = open(file_path, 'wb')
+                fout.write(webContent)
+                fout.close() 
 
 
 def process_a_tags(content):
@@ -196,10 +218,12 @@ def save_as_csv(file_name, data):
 
 def main():
     """ MAIN """
-    download_files()
-    qa_pairs = extract_qa_pairs()
-    save_as_json(OUTPUT_ROOT_NAME, qa_pairs)
-    save_as_csv(OUTPUT_ROOT_NAME, qa_pairs)
+    make_dirs() 
+    download_html_files()
+    # download_files()
+    # qa_pairs = extract_qa_pairs()
+    # save_as_json(OUTPUT_ROOT_NAME, qa_pairs)
+    # save_as_csv(OUTPUT_ROOT_NAME, qa_pairs)
 
 
 if __name__ == '__main__':
