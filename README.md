@@ -1,4 +1,4 @@
-# Preguntas frecuentes de la Universidad de Valladolid (UVA)
+# Preguntas frecuentes de la Universidad de Valladolid (UVA) (English below)
 Obtención y procesamiento de las preguntas frecuentes (FAQs) de la [página de Relaciones Internacionales](https://relint.uva.es/internacional/espanol/estudiantes/guia-bienvenida/preguntas-frecuentes/) y la [paǵina de Escuela de Doctorado](https://escueladoctorado.uva.es/export/sites/doctorado/faqs/AAFF/?lang=es) de la Universidad de Valladolid en **Español** e **Inglés**. 
 
 Las preguntas son almacenadas tanto en formato CSV como en formato JSON. Cada fichero posee los siguientes 2 campos:
@@ -40,7 +40,7 @@ Uncommenting the commented lines of code, there is the possibility of adding:
 
 
 ### Execution
-The [main.py](./main.py)  file fetches the HTML pages, extracts the question and answer pairs and stores them in the format specified in CSV and JSON. This repository already contains the HTML data, as well as the question and answer pairs extracted in CSV and JSON terms results of the execution of [main.py](./main.py).
+The [main.py](./main.py)  file fetches the HTML pages, extracts the question-answer pairs and stores them in the format specified in CSV and JSON. This repository already contains the HTML data, as well as the question-answer pairs extracted in CSV and JSON terms results of the execution of [main.py](./main.py).
 
 If you want to run the [main.py](./main.py) file to re-extract the question-answer pairs, install the requirements and run in console the command
 ```
