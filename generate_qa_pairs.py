@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# IMPORTS
+# ---IMPORTS ---
 import os 
 import pandas as pd 
 from re import sub
@@ -12,12 +12,10 @@ from urllib.request import Request, urlopen
 from functools import reduce
 
 
-# GLOBAL VARIABLES
+# --- GLOBAL VARIABLES ---
 HTML_DIR = 'raw_html'
 CSV_DIR = 'csv_files'
 JSON_DIR = 'json_files'
-
-OUTPUT_ROOT_NAME = "qa_pairs"
 INTREL_ROOT_NAME = "intrel"
 DOCTORATE_ROOT_NAME = "doctorate"
 LANGUAGES =['en', 'es'] 
@@ -61,13 +59,10 @@ def gen_file_path(main_dir, lang, root, i):
     """ Combines a root name and an index into an HTML file name """
     return "{}/{}/{}{}.html".format(main_dir, lang, root, i)
 
-def download_html_files():
-    """ Downloads html files if they don't exist and saves
-        them in the specified directory.
-    """
-    print("Downloading HTML files...")
+def download_html_intrel():
+    """ Downloads the UVA International Relationships' FAQs """
+    print("Downloading 'intrel' HTML files...")
     for lang in LANGUAGES:       
-        # Download UVA International Relationships FAQs
         for i, url in enumerate(INTREL_URLS[lang]):
             file_path = gen_file_path(HTML_DIR, lang, INTREL_ROOT_NAME, i+1)
 
@@ -82,7 +77,10 @@ def download_html_files():
                 fout.write(webContent)
                 fout.close() 
 
-        # Download UVA Doctorate School FAQs
+def download_html_doctorate():
+    """ Downloads the UVA Doctorate School's FAQs """
+    print("Downloading 'intrel' HTML files...")
+    for lang in LANGUAGES:   
         for i, url in enumerate(DOCTORATE_URLS[lang]):
             file_path = gen_file_path(HTML_DIR, lang, DOCTORATE_ROOT_NAME, i+1)
 
@@ -97,113 +95,114 @@ def download_html_files():
                 fout.write(webContent)
                 fout.close() 
 
-
-def process_a_tags(content):
-    """ Processes each <a> tag extracting its 'href' attribute and adding 
-        it between parenthesis after the text. It considers the existence
-        of a <base> tag.
-    """
-    base = content.find('base')
-  
-    for a in content.find_all('a'):
-        if a.previousSibling:
-            href = a['href']
-            text = a.get_text()
-            if base != None:
-                url = urljoin(base['href'], href)
-            else:
-                url = href            
-            a.previousSibling.replaceWith(a.previousSibling + " {} ({}) ".format(text, url)) 
-            a.extract() 
-
-def extract_qa_pairs_intrel(page):
-    """ Extracts all the QA pairs of a intrelX.html file and 
-        creates a list of dicts with 'answer', 'question' and 'section' values
-    """
-    qa_pairs = [] 
-    content = BeautifulSoup(page, "html.parser")
-    #process_a_tags(content)
-    
-    sec_titles = list(map(lambda x : x.get_text(), 
-                            content.find_all('div', class_='elementor-clearfix')))
-    sec_contents = content.find_all('div', {'data-accordion-type':'accordion'})   
-
-    for sec in range(len(sec_titles)):
-        q_is = sec_contents[sec].find_all('i', class_='fa-accordion-icon')
-        q_spans = reduce(lambda a, b: a+b, list(map(lambda x : x.find_parents('span'), q_is)))
-        sec_questions = list(map(lambda x : x.get_text(), q_spans))
-
-        sec_answers = list(map(lambda x : str(x.contents[0]).replace('<p>', '').replace('</p>', '').replace('</p>', ' ')
-                        .replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ',').replace('<br/>', ' '), 
-                        sec_contents[sec].find_all('div', class_=['eael-accordion-content', 'clearfix'])))
-
-        for p in range(len(sec_questions)):
-            qa_pairs.append({'question': sec_questions[p], 
-                            'answer': sec_answers[p], 
-                            #'page': 'relint',
-                            #'section': sec_titles[sec]
-                            })
-    
-    return qa_pairs
-
-
-def extract_qa_pairs_doctorate(page):
+def extract_qa_pairs_intrel():
     """ Extracts all the QA pairs of doctorateX.html file and 
         creates a list of dicts with 'answer', 'question' and 'section' values
     """
-    qa_pairs = []        
-    content = BeautifulSoup(page, "html.parser")
+    print("Extracting QA pairs from 'intrel' pages...")
+    for lang in LANGUAGES:
+        intrel_qa_pairs =[]       
+        for i in range(len(INTREL_URLS[lang])):
+            # Read HTML file   
+            file_path = gen_file_path(HTML_DIR, lang, INTREL_ROOT_NAME, i+1)
+            with open(file_path, "r") as fin:
+                page = fin.read()            
+
+            # Extract QA pairs from HTML file 
+            page_qa_pairs = []     
+            content = BeautifulSoup(page, "html.parser")   
+            sec_titles = list(map(lambda x : x.get_text(), 
+                            content.find_all('div', class_='elementor-clearfix')))
+            sec_contents = content.find_all('div', {'data-accordion-type':'accordion'})   
+
+            for sec in range(len(sec_titles)):
+                q_is = sec_contents[sec].find_all('i', class_='fa-accordion-icon')
+                q_spans = reduce(lambda a, b: a+b, list(map(lambda x : x.find_parents('span'), q_is)))
+                sec_questions = list(map(lambda x : x.get_text(), q_spans))
+
+                sec_answers = list(map(lambda x : str(x.contents[0])
+                                                    .replace('<p>', '')
+                                                    .replace('</p>', '')
+                                                    .replace('</p>', ' ')
+                                                    .replace('<ul>', '')
+                                                    .replace('</ul>', '')
+                                                    .replace('<li>', ' ')
+                                                    .replace('</li>', ',')
+                                                    .replace('<br/>', ' '), 
+                                                sec_contents[sec]\
+                                                    .find_all('div', class_=['eael-accordion-content', 'clearfix'])))
+
+                for p in range(len(sec_questions)):
+                    page_qa_pairs.append({'question': sec_questions[p], 
+                                    'answer': sec_answers[p], 
+                                    #'page': 'relint',
+                                    #'section': sec_titles[sec]
+                                    })
+            intrel_qa_pairs.append(page_qa_pairs)
     
-    sec_title = content.find_all('div', class_='headline')[1].get_text()\
-                        .replace('Frequently asked questions about ', '')\
-                        .replace('Frequently Asked Questions about ', '')
-    
-    sec_content = content.find_all('div', class_='panel-group acc-v2')[1]  
+        intrel_qa_pairs = list(reduce(lambda x,y: x+y, intrel_qa_pairs)) 
 
-    sec_questions = list(map(lambda x: sub('\n[\t]+[\s]+', '', x.get_text()),
-                            sec_content.find_all('a', class_='accordion-toggle')))
-
-    #process_a_tags(sec_content)
-
-    sec_answers = list(map(lambda x: str(x.contents[1].contents[0]).replace('<p style=\"text-align: justify;\">', '').replace('</p>', ' ')
-                    .replace('<ul>', '').replace('</ul>', '').replace('<li>', ' ').replace('</li>', ',').replace('<br/>', ' '),
-                    sec_content.find_all('div', class_='panel-body')))
-    
-    for p in range(len(sec_questions)):
-        qa_pairs.append({'question': sec_questions[p], 
-                        'answer': sec_answers[p],
-                        #'page': 'doctorate', 
-                        #'section': sec_title,
-                         })
-    return qa_pairs
+        # Save as JSON 
+        save_as_json('{}/{}/{}'.format(JSON_DIR, lang, INTREL_ROOT_NAME), intrel_qa_pairs)
+        # Save as CSV 
+        save_as_csv('{}/{}/{}'.format(CSV_DIR, lang, INTREL_ROOT_NAME), intrel_qa_pairs) 
 
 
-def extract_qa_pairs():
-    """ Extracts all the QA pairs and creates a list of dicts with 
-        'answer', 'question' and 'section' values
+def extract_qa_pairs_doctorate():
+    """ Extracts all the QA pairs of doctorateX.html file and 
+        creates a list of dicts with 'answer', 'question' and 'section' values
     """
-    qa_pairs = [] 
-    
-    for i in range(len(INTREL_URLS)):
-        file_path = gen_file_path(INTREL_ROOT_NAME, i+1)
-        with open(file_path, "r") as fin:
-            page = fin.read()            
-        qa_pairs.append(extract_qa_pairs_intrel(page))
-    
-    for i in range(len(DOCTORATE_URLS)):
-        file_path = gen_file_path(DOCTORATE_ROOT_NAME, i+1)
-        with open(file_path, "r") as fin:
-            page = fin.read()            
-        qa_pairs.append(extract_qa_pairs_doctorate(page))
+    print("Extracting QA pairs from 'doctorate' pages...")
+    for lang in LANGUAGES:
+        doctorate_qa_pairs =[]       
+        for i in range(len(DOCTORATE_URLS[lang])):
+            # Read HTML file   
+            file_path = gen_file_path(HTML_DIR, lang, DOCTORATE_ROOT_NAME, i+1)
+            with open(file_path, "r") as fin:
+                page = fin.read()            
 
-    return list(reduce(lambda x,y: x+y, qa_pairs)) 
+            # Extract QA pairs from HTML file 
+            page_qa_pairs = []        
+            content = BeautifulSoup(page, "html.parser")
+            
+            sec_title = content.find_all('div', class_='headline')[1].get_text()\
+                                .replace('Frequently asked questions about ', '')\
+                                .replace('Frequently Asked Questions about ', '')
+            
+            sec_content = content.find_all('div', class_='panel-group acc-v2')[1]  
 
+            sec_questions = list(map(lambda x: sub('\n[\t]+[\s]+', '', x.get_text()),
+                                    sec_content.find_all('a', class_='accordion-toggle')))
+            #process_a_tags(sec_content)
+            sec_answers = list(map(lambda x: str(x.contents[1].contents[0])
+                                            .replace('<p style=\"text-align: justify;\">', '')
+                                            .replace('</p>', ' ')
+                                            .replace('<ul>', '')
+                                            .replace('</ul>', '')
+                                            .replace('<li>', ' ')
+                                            .replace('</li>', ',')
+                                            .replace('<br/>', ' '),
+                                        sec_content.find_all('div', class_='panel-body')))
+            
+            for p in range(len(sec_questions)):
+                page_qa_pairs.append({'question': sec_questions[p], 
+                                'answer': sec_answers[p],
+                                #'page': 'doctorate', 
+                                #'section': sec_title,
+                                })
+            doctorate_qa_pairs.append(page_qa_pairs)
+    
+        doctorate_qa_pairs = list(reduce(lambda x,y: x+y, doctorate_qa_pairs)) 
+
+        # Save as JSON 
+        save_as_json('{}/{}/{}'.format(JSON_DIR, lang, DOCTORATE_ROOT_NAME), doctorate_qa_pairs)
+        # Save as CSV 
+        save_as_csv('{}/{}/{}'.format(CSV_DIR, lang, DOCTORATE_ROOT_NAME), doctorate_qa_pairs) 
 
 def save_as_json(file_name, data):
     """ Saves the provided data as a json file """
     with open('{}.json'.format(file_name), 'w', encoding='utf8') as fout:
         dump(data , fout, indent=4, sort_keys=True, ensure_ascii=False)
-
 
 def save_as_csv(file_name, data):
     """ Saves the provided data as a csv file """ 
@@ -215,16 +214,13 @@ def save_as_csv(file_name, data):
     df = pd.DataFrame(data=d)
     df.to_csv('{}.csv'.format(file_name), sep=',', index=False)
 
-
 def main():
     """ MAIN """
     make_dirs() 
-    download_html_files()
-    # download_files()
-    # qa_pairs = extract_qa_pairs()
-    # save_as_json(OUTPUT_ROOT_NAME, qa_pairs)
-    # save_as_csv(OUTPUT_ROOT_NAME, qa_pairs)
-
+    download_html_intrel()
+    download_html_doctorate()
+    extract_qa_pairs_doctorate()
+    extract_qa_pairs_intrel()
 
 if __name__ == '__main__':
     main()
