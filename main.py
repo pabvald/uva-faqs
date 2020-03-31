@@ -122,13 +122,12 @@ def extract_qa_pairs_intrel():
 
                 sec_answers = list(map(lambda x : str(x.contents[0])
                                                     .replace('<p>', '')
-                                                    .replace('</p>', '')
-                                                    .replace('</p>', ' ')
-                                                    .replace('<ul>', '')
+                                                    .replace('</p>', '\n')
+                                                    .replace('<ul>', '\n')
                                                     .replace('</ul>', '')
-                                                    .replace('<li>', ' ')
-                                                    .replace('</li>', ',')
-                                                    .replace('<br/>', ' '), 
+                                                    .replace('<li>', '\n\t<b>+</b> ')
+                                                    .replace('</li>', '')
+                                                    .replace('<br/>', '\n'), 
                                                 sec_contents[sec]\
                                                     .find_all('div', class_=['eael-accordion-content', 'clearfix'])))
 
@@ -176,12 +175,12 @@ def extract_qa_pairs_doctorate():
             sec_answers = list(map(lambda x: str(x.contents[1].contents[0])
                                             .replace('<p style=\"text-align: justify;\">', '')
                                             .replace('<p>', '')
-                                            .replace('</p>', ' ')
-                                            .replace('<ul>', '')
+                                            .replace('</p>', '\n')
+                                            .replace('<ul>', '\n')
                                             .replace('</ul>', '')
-                                            .replace('<li>', ' ')
-                                            .replace('</li>', ',')
-                                            .replace('<br/>', ' '),
+                                            .replace('<li>', '\n\t<b>+</b> ')
+                                            .replace('</li>', '')
+                                            .replace('<br/>', '\n'), 
                                         sec_content.find_all('div', class_='panel-body')))
             
             for p in range(len(sec_questions)):
