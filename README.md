@@ -21,8 +21,9 @@ situándose en el directorio raíz del repositorio.
 
 ### Dependencias 
 ```
-pandas==1.0.3
-bs4==0.0.1
+pandas~=1.0.3
+bs4~=0.0.1
+beautifulsoup4~=4.8.2
 ```
 <hr>
 
@@ -50,6 +51,7 @@ being located in the root directory of the repository.
 
 ### Requirements
 ```
-pandas == 1.0.3
-bs4 == 0.0.1
+pandas~=1.0.3
+bs4~=0.0.1
+beautifulsoup4~=4.8.2
 ```
