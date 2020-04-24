@@ -58,7 +58,7 @@ def gen_file_path(main_dir, lang, root, i):
 
 
 def download_html_intrel():
-    """ Downloads the UVA International Relationships' FAQs """
+    """ Downloads the UVA International Relations' FAQs """
     print("Downloading 'intrel' HTML files...")
     for lang in LANGUAGES:
         for i, url in enumerate(INTREL_URLS[lang]):
