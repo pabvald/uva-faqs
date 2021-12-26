@@ -51,11 +51,9 @@ def make_dirs():
             # Directory already exists
             pass
 
-
 def gen_file_path(main_dir, lang, root, i):
     """ Combines a root name and an index into an HTML file name """
     return "{}/{}/{}{}.html".format(main_dir, lang, root, i)
-
 
 def download_html_intrel():
     """ Downloads the UVA International Relations' FAQs """
@@ -75,7 +73,6 @@ def download_html_intrel():
                 fout.write(web_content)
                 fout.close()
 
-
 def download_html_doctorate():
     """ Downloads the UVA Doctorate School's FAQs """
     print("Downloading 'intrel' HTML files...")
@@ -94,10 +91,10 @@ def download_html_doctorate():
                 fout.write(web_content)
                 fout.close()
 
-
 def extract_qa_pairs_intrel():
-    """ Extracts all the QA pairs of doctorateX.html file and 
-        creates a list of dicts with 'answer', 'question' and 'section' values
+    """ 
+    Extracts all the QA pairs of doctorateX.html file and 
+    creates a list of dicts with 'answer', 'question' and 'section' values
     """
     print("Extracting QA pairs from 'intrel' pages...")
     for lang in LANGUAGES:
@@ -145,10 +142,10 @@ def extract_qa_pairs_intrel():
         # Save as CSV 
         save_as_csv('{}/{}/{}'.format(CSV_DIR, lang, INTREL_ROOT_NAME), intrel_qa_pairs)
 
-
 def extract_qa_pairs_doctorate():
-    """ Extracts all the QA pairs of doctorateX.html file and 
-        creates a list of dicts with 'answer', 'question' and 'section' values
+    """ 
+    Extracts all the QA pairs of doctorateX.html file and 
+    creates a list of dicts with 'answer', 'question' and 'section' values
     """
     print("Extracting QA pairs from 'doctorate' pages...")
     for lang in LANGUAGES:
@@ -197,12 +194,10 @@ def extract_qa_pairs_doctorate():
         # Save as CSV 
         save_as_csv('{}/{}/{}'.format(CSV_DIR, lang, DOCTORATE_ROOT_NAME), doctorate_qa_pairs)
 
-
 def save_as_json(file_name, data):
     """ Saves the provided data as a json file """
     with open('{}.json'.format(file_name), 'w', encoding='utf8') as fout:
         dump(data, fout, indent=4, sort_keys=True, ensure_ascii=False)
-
 
 def save_as_csv(file_name, data):
     """ Saves the provided data as a csv file """
@@ -213,7 +208,6 @@ def save_as_csv(file_name, data):
     d = {'Question': questions, 'Answer': answers}
     df = pd.DataFrame(data=d)
     df.to_csv('{}.csv'.format(file_name), sep=',', index=False)
-
 
 def main():
     """ MAIN """
